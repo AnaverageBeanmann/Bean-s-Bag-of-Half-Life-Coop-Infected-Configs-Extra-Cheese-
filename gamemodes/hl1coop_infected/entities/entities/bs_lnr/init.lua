@@ -88,7 +88,6 @@ local zombieType = {
 			"npc_vj_lnrhl2_headcrab",
 			"npc_vj_lnrhl2_zombie_poison",
 			"npc_vj_lnrhl2_zombie_poison",
-			"npc_vj_lnrhl2_zombine"
 		  },
 	[7] = {"npc_vj_lnrhl2_zombie",
 			"npc_vj_lnrhl2_zombie_fast",
@@ -208,13 +207,6 @@ local zombieType = {
 			"npc_vj_hlr1_headcrab_baby",
 			"npc_vj_hlr1_headcrab_baby",
 			"npc_vj_hlr1_headcrab_baby"
-		  },
-  	[6] = {"npc_vj_lnrhl2_zombie",
-			"npc_vj_lnrhl2_zombie",
-			"npc_vj_lnrhl2_zombie",
-			"npc_vj_lnrhl2_headcrab",
-			"npc_vj_lnrhl2_zombie_poison",
-			"npc_vj_lnrhl2_zombie_poison"
 		  },
 }
 
