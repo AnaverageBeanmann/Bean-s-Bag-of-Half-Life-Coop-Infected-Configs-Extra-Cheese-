@@ -31,7 +31,7 @@ local npctable = {
 	["npc_antlionguard"] = 70,
 	["npc_vj_lnrhl2_zombie"] = 25,
 	["npc_vj_lnrhl2_zombie_poison"] = 40,
-	["npc_vj_lnrhl2_zombine"] = 50,
+	["npc_vj_lnrhl2_zombine"] = 75,
 	["npc_vj_lnrhl2_zombie_fast"] = 50,
 	["npc_vj_lnrhl2_headcrab"] = 40,
 	["npc_vj_lnrhl2_cheaple"] = 25,
@@ -166,8 +166,6 @@ local zombieType = {
 			"npc_vj_lnrhl2_rebelf_wal",
 			"npc_vj_lnrhl2_medicf_wal",
 			"npc_vj_lnrhl2_citizenf_wal",
-			"npc_vj_lnrhl2_rebel_tau",
-			"npc_vj_lnrhl2_rebel_hvy",
 		  },
 	[11] = {"npc_vj_hla_antlion",
 			"npc_vj_hla_antlion",
@@ -210,21 +208,25 @@ local zombieType = {
 			"npc_vj_hlr1_headcrab_baby",
 			"npc_vj_hlr1_headcrab_baby",
 			"npc_vj_hlr1_headcrab_baby"
-		  }
+		  },
+  	[6] = {"npc_vj_lnrhl2_zombie",
+			"npc_vj_lnrhl2_zombie",
+			"npc_vj_lnrhl2_zombie",
+			"npc_vj_lnrhl2_headcrab",
+			"npc_vj_lnrhl2_zombie_poison",
+			"npc_vj_lnrhl2_zombie_poison"
+		  },
 }
 
 local healthTable = {
-	["npc_vj_lnrhl2_zombie"] = 50,
-	["npc_vj_lnrhl2_zombie_poison"] = 100,
-	["npc_vj_lnrhl2_zombine"] = 100,
-	["npc_vj_lnrhl2_zombie_fast"] = 50,
-	["npc_vj_lnrhl2_headcrab"] = 50,
+	["npc_vj_hla_antlion"] = 100,
+	["npc_vj_hla_antlion_spitter"] = 100,
 }
 
 local itemDrop = {
 	["npc_vj_lnrhl2_zombie"] = false,
 	["npc_vj_lnrhl2_zombie_poison"] = false,
-	["npc_vj_lnrhl2_zombine"] = {"hl1_ammo_9mmar","weapon_hl1_handgrenade","hl1_ammo_argrenades","hl1_ammo_buckshot"},
+	["npc_vj_lnrhl2_zombine"] = {"hl1_ammo_9mmar","weapon_handgrenade","hl1_ammo_argrenades","hl1_ammo_buckshot"},
 	["npc_vj_lnrhl2_zombie_fast"] = false,
 	["npc_vj_lnrhl2_headcrab"] = false,
 	["npc_vj_lnrhl2_rebelm_wal"] = {"hl1_ammo_9mmar", "hl1_ammo_buckshot"},
@@ -319,6 +321,8 @@ function ENT:SpawnNPC(pos)
 		npc.FadeCorpse = true
 		npc.FadeCorpseTime = 60
 		npc.NextProcessTime = 3
+		npc.FindEnemy_UseSphere = true
+		npc.FindEnemy_CanSeeThroughWalls = true
 		----------------------------
 		npc.FollowPlayer = false
 		npc.AllowPrintingInChat = false
@@ -700,6 +704,7 @@ function ENT:SpawnNPC(pos)
 end
 
 function ENT:Think()
+
 	if self.ChatSpam then
 		PrintMessage(HUD_PRINTTALK, "VJ Base is missing! Check gamemode workshop page!")
 		self:NextThink(CurTime() + 10)
@@ -707,18 +712,36 @@ function ENT:Think()
 	end
 
 	if GAMEMODE:GetCoopState() != COOP_STATE_INGAME then return end
+
 	local roundState = GAMEMODE:GetRoundState()
+
 	if roundState == ROUND_END or roundState == GAME_END then return end
-	if roundState == ROUND_PREPARE then
-		self:NextThink(CurTime() + math.Rand(20, 40) / self.SpawnFreq)
-		self.MaxNPCs = 1
-	elseif roundState == ROUND_EVACUATION then
-		self:NextThink(CurTime() + math.Rand(10, 20) / self.SpawnFreq)
-		self.MaxNPCs = 4
+
+	
+	if GetConVar("BBoHLCIMCEC_Enemies"):GetInt() == 2 then
+		if roundState == ROUND_PREPARE then
+			self:NextThink(CurTime() + math.Rand(20, 40) / self.SpawnFreq)
+			self.MaxNPCs = 1
+		elseif roundState == ROUND_EVACUATION then
+			self:NextThink(CurTime() + math.Rand(10, 20) / self.SpawnFreq)
+			self.MaxNPCs = 2
+		else
+			self:NextThink(CurTime() + math.Rand(10, 30) / self.SpawnFreq)
+			self.MaxNPCs = 1
+		end
 	else
-		self:NextThink(CurTime() + math.Rand(10, 30) / self.SpawnFreq)
-		self.MaxNPCs = 3
+		if roundState == ROUND_PREPARE then
+			self:NextThink(CurTime() + math.Rand(20, 40) / self.SpawnFreq)
+			self.MaxNPCs = 1
+		elseif roundState == ROUND_EVACUATION then
+			self:NextThink(CurTime() + math.Rand(10, 20) / self.SpawnFreq)
+			self.MaxNPCs = 4
+		else
+			self:NextThink(CurTime() + math.Rand(10, 30) / self.SpawnFreq)
+			self.MaxNPCs = 3
+		end
 	end
+
 	for k, v in pairs(self.SpawnedNPCs) do
 		if !v:IsValid() or v:Health() <= 0 then
 			table.RemoveByValue(self.SpawnedNPCs, v)

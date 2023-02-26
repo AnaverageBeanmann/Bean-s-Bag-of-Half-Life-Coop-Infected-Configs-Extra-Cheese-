@@ -17,7 +17,48 @@ if VJExists == true then
 	/*
 	update 3 changelog
 	
-	- Peppino's Sauce Machine is now just a regular wave song and doesn't play when you activate the panel
+	Music
+	- Peppino's Sauce Machine is now a wave song instead of a panel song
+	- Spooky Apartment Escape is now a panel song instead of an escape song
+	- Thousand March is now an escape song instead of a panel song
+	- Panel music now plays if you lose and restart at the checkpoint
+	- Wave music now plays if you vote for and play the map again after beating it
+	- Added Time For A Smackdown, Pizza Deluxe, Pizza Pie-Ing, Receding Hairline Celebration Party, Choosing The Toppings, and Hip To Be Italian for use in the upcoming custom end-of-match credits function
+	- Added Meatophobia, Hard Drive To Munch You, Your Fat Ass Slows You Down, and Okay Campers, Rise and Shine! for use in the escape fail sequence
+	- Added Unexpectancy Part 3 as another escape song
+	
+	NPCs
+	- Added spawn points in tunnel 24
+	- Added three more spawn points to the lowest spot the elevator can go to/where the antlion caves end
+	- Adjusted the hole ceiling spawn in the same area
+	- Enemies now have FindEnemy_UseSphere and FindEnemy_CanSeeThroughWalls set to true
+	- Added the HLA Antlions to the npc health table
+	- Zombines, Tau Rebels, and Heavy Rebels can no longer spawn at spawners with the "walkers only" spawnlist
+	- Adjusted Zombine item drops so you can't get two different grenade weapons
+	- Zombines now give 75 points instead of 50
+	- Reduced spawn rate of HLA Antlions
+
+	Weapons/Items
+	- Shuffled around the hidden weapons
+	- Moved an mp5 mag in tunnel 36 so it doesn't float anymore
+	- Moved a barrel in tunnel 36 to a different spot
+	- Slightly moved a barrel in the area tunnel 24 leads to so that it doesn't clip into the wall
+
+	Other
+	- Adjusted player spawns
+	- The escape fail sequence is now shorter
+	- Pizzaface's laugh now plays instead of the siren in the escape fail
+	
+	recommended setup for hl2 enemies
+	zombies infecting from attacks - disabled
+	player controlled zombies - disabled
+	zombies being able to climb and jump - enabled
+	difficulty - 
+	crawlers
+	runners
+	super sprinters
+	anything else can be left up to personal preference
+
 	*/
 
 	include('autorun/vj_controls.lua')

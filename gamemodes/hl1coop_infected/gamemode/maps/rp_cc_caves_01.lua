@@ -52,6 +52,17 @@ local musictable = {
     ["PizzaTower.Overcooked"] = {file = "pizza/Overcooked_Meat_Lover.mp3", dur = 128},
     ["PizzaTower.Nightmare"] = {file = "pizza/Leaning_Nightmare.mp3", dur = 139},
     ["PizzaTower.Spooky"] = {file = "pizza/Spooky_Apartment_Escape.mp3", dur = 167},
+    ["PizzaTower.UnexPart3"] = {file = "pizza/Unexpectancy_Part3.mp3", dur = 237},
+    ["PizzaTower.FatAss"] = {file = "pizza/Your_Fat_Ass_Slows_You_Down.mp3", dur = 5},
+    ["PizzaTower.Campers"] = {file = "pizza/Okay_Campers,_Rise_And_Shine!.mp3", dur = 53},
+    ["PizzaTower.Munch"] = {file = "pizza/Hard_Drive_To_Munch_You.mp3", dur = 39},
+    ["PizzaTower.Meatophobia"] = {file = "pizza/Meatophobia.mp3", dur = 51},
+    ["PizzaTower.Smackdown"] = {file = "pizza/Time_For_A_Smackdown.mp3", dur = 60},
+    ["PizzaTower.Hairline"] = {file = "pizza/Receding_Hairline_Celebration_Party.mp3", dur = 179},
+    ["PizzaTower.Pieing"] = {file = "pizza/Pizza_Pie-Ing.mp3", dur = 130},
+    ["PizzaTower.Deluxe"] = {file = "pizza/Pizza_Deluxe.mp3", dur = 134},
+    ["PizzaTower.Italian"] = {file = "pizza/Hip_To_Be_Italian.mp3", dur = 72},
+    ["PizzaTower.Toppings"] = {file = "pizza/Choosing_The_Toppings.mp3", dur = 128},
 }
  
 for k,v in pairs(musictable) do
@@ -166,12 +177,16 @@ MAP.ZombieSet = 1
 	-- 2 = LNR: HL2 - Rebels
 	-- 3 = HLA Antlions
 if GetConVar("BBoHLCIMCEC_Enemies"):GetInt() == 1 then
+	-- 2 = LNR: HL2 - Rebels
 	MAP.ZombieSet = 2
 elseif GetConVar("BBoHLCIMCEC_Enemies"):GetInt() == 2 then
+	-- 3 = HLA Antlions
 	MAP.ZombieSet = 3
+	MAP.MAX_SPAWNED_NPCS = 8
 elseif GetConVar("BBoHLCIMCEC_Enemies"):GetInt() == 3 then
 	MAP.ZombieSet = 4
 else
+	-- 1 = LNR: HL2 - HL2 Zombies
 	MAP.ZombieSet = 1
 end
 
@@ -201,8 +216,9 @@ MAP.EvacMusic = {
 	"PizzaTower.UnexPart2",
 	"PizzaTower.Overcooked",
 	"PizzaTower.Nightmare",
-	"PizzaTower.Spooky",
-	"PizzaTower.Deservioli"
+	"PizzaTower.Deservioli",
+	"PizzaTower.UnexPart3",
+	"PizzaTower.Thousand"
 }
 
 MAP.PortalPoints = {
@@ -312,7 +328,7 @@ function MAP:OnBarrelExplode(ent)
 end
 
 local siren
-local sirenSnd = Sound("ambience/siren.wav")
+local sirenSnd = Sound("music/hl1coop_inf/pizza/PizzafaceLaugh2.mp3")
 function MAP:GameOverEvent()
 	local roundState = GAMEMODE:GetRoundState()
 
@@ -329,12 +345,22 @@ function MAP:GameOverEvent()
 		siren:Play()
 	end
 
-	timer.Simple(15, function()
+	local failmusic = math.random(1,3)
+	if failmusic == 1 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Campers")
+	elseif failmusic == 2 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Munch")
+	else
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Meatophobia")
+	end
+
+	timer.Simple(5, function()
 		if siren and siren:IsPlaying() then
 			siren:Stop()
 		end
 		if GAMEMODE:GetRoundState() == roundState then
 			GAMEMODE:EmitGlobalSound("weapons/mortarhit.wav", 70)
+			GAMEMODE:PlayGlobalMusic("PizzaTower.FatAss")
 			for k, v in pairs(player.GetAll()) do
 				v:ScreenFade(SCREENFADE.IN, Color(255, 255, 255, 255), 3, 1)
 				if v:Alive() then
@@ -343,7 +369,7 @@ function MAP:GameOverEvent()
 			end
 			for k, v in pairs(ents.GetAll()) do
 				if v:IsNPC() and v:Health() > 0 then
-					v:TakeDamage(999, game.GetWorld(), game.GetWorld())
+					v:TakeDamage(9999, game.GetWorld(), game.GetWorld())
 				end
 			end
 			GAMEMODE:GameOver(false, "#game_evacfailed")
@@ -478,25 +504,25 @@ function MAP:ModifyMapEntities()
 
 	local randomspawnpoints = math.random(1,10)
 	if randomspawnpoints == 1 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-7962,5787,159), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-7957,5378,196), Angle(9,74,0))
 	elseif randomspawnpoints == 2 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-3564,6390,-652), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-3564,6390,-652), Angle(6,169,0))
 	elseif randomspawnpoints == 3 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-6742,6782,-5689), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-6742,6782,-5689), Angle(4,-92,0))
 	elseif randomspawnpoints == 4 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-12659,4517,-6082), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-12659,4517,-6082), Angle(3,-25,0))
 	elseif randomspawnpoints == 5 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-8147,4005,-5885), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-8147,4005,-5885), Angle(0,0,0))
 	elseif randomspawnpoints == 6 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-7559,6744,-7521), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-7559,6744,-7521), Angle(-1,93,0))
 	elseif randomspawnpoints == 7 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-9416,5541,-7977), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-9416,5541,-7977), Angle(-3,-118,0))
 	elseif randomspawnpoints == 8 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-6543,5286,-8385), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-6543,5286,-8385), Angle(-0,117,0))
 	elseif randomspawnpoints == 9 then
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-5742,3004,592), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-5742,3004,592), Angle(2,177,0))
 	else
-		GAMEMODE:CreateCoopSpawnpoints(Vector(-6335,5642,-687), Angle())
+		GAMEMODE:CreateCoopSpawnpoints(Vector(-6335,5642,-687), Angle(2,169,0))
 	end
 	
 	chargerEnt = ents.Create("item_healthcharger")
@@ -557,9 +583,9 @@ function MAP:ModifyMapEntities()
 				NO_WAVE_MUSIC = true
 				local PanelMusic = math.random(1,3)
 				if PanelMusic == 1 then
-					GAMEMODE:PlayGlobalMusic("PizzaTower.UnexPart1")
+					GAMEMODE:PlayGlobalMusic("PizzaTower.Spooky")
 				elseif PanelMusic == 2 then
-					GAMEMODE:PlayGlobalMusic("PizzaTower.Thousand")
+					GAMEMODE:PlayGlobalMusic("PizzaTower.UnexPart1")
 				else
 					GAMEMODE:PlayGlobalMusic("PizzaTower.NeverEnd")
 				end
@@ -612,7 +638,7 @@ function MAP:ModifyMapEntities()
 	CreateBarrel(Vector(-4400,7368,-680), math.random(10,15))
 	CreateBarrel(Vector(-3787,6316,-687), math.random(10,15))
 	CreateBarrel(Vector(-3928,8526,-687), math.random(10,15))
-	CreateBarrel(Vector(-4269,7290,-883), math.random(10,15), Angle(26, -60, 90))
+	CreateBarrel(Vector(-3998,6805,-687), math.random(10,15))
 	
 	CreateBarrel(Vector(-3965,6434,-687), math.random(10,15))
 	CreateBarrel(Vector(-3809,6619,-687), math.random(10,15))
@@ -628,7 +654,7 @@ function MAP:ModifyMapEntities()
 	CreateBarrel(Vector(-7199,3024,-703), math.random(10,15))
 	CreateBarrel(Vector(-7354,2585,-465), math.random(10,15))
 	CreateBarrel(Vector(-6609,2964,-693), math.random(10,15))
-	CreateBarrel(Vector(-6596,2894,-703), math.random(10,15))
+	CreateBarrel(Vector(-6606,2894,-705), math.random(10,15))
 	CreateBarrel(Vector(-6156,2878,-629), math.random(10,15))
 	CreateBarrel(Vector(-6181,2953,-629), math.random(10,15))
 	CreateBarrel(Vector(-6257,2943,-629), math.random(10,15))
@@ -775,6 +801,13 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3699,5735,-682), Angle(), 8, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3701,5629,-687), Angle(), 8, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3702,5514,-677), Angle(), 8, 1)
+		-- Tunnel 24
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,4905,-685), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,4595,-673), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6800,4253,-684), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6805,3913,-678), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,3596,-687), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,3298,-687), Angle(), 8, 1)
 		-- Tunnel 24 lower area
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,3083,-687), Angle(), 8, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,1619,-686), Angle(), 8, 1)
@@ -846,14 +879,17 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6444,7011,-8531), Angle(), 8, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6245,7419,-8708), Angle(), 8, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6503,5002,-7946), Angle(), 9, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6602,3063,-8382), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6622,3862,-8378), Angle(), 8, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6604,4337,-8382), Angle(), 8, 1)
 		
 	elseif MAP.ZombieSet == 3 then
 		-- HLA Antlions
 		-- Generator room
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7265,5468,-623), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7272,5998,-623), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6772,7010,-481), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6570,6261,-688), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7265,5468,-623), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7272,5998,-623), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6772,7010,-481), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6570,6261,-688), Angle(), 11, 0.65)
 		-- Tunnel 36 ceiling hole
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-4633,7867,-479), Angle(), 11, 0.20)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-4553,7789,-479), Angle(), 11, 0.20)
@@ -861,80 +897,90 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-4381,7968,-482), Angle(), 11, 0.20)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-4461,8049,-474), Angle(), 11, 0.20)
 		-- Tunnel 12
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-3699,5735,-682), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-3701,5629,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-3702,5514,-677), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-3699,5735,-682), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-3701,5629,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-3702,5514,-677), Angle(), 11, 0.65)
+		-- Tunnel 24
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,4905,-685), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,4595,-673), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6800,4253,-684), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6805,3913,-678), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,3596,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,3298,-687), Angle(), 11, 0.65)
 		-- Tunnel 24 lower area
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,3083,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,1619,-686), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7160,1860,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6916,1662,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6697,1873,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6254,2168,-687), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6441,2979,-623), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6686,2669,-687), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,3083,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,1619,-686), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7160,1860,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6916,1662,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6697,1873,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6254,2168,-687), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6441,2979,-623), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6686,2669,-687), Angle(), 11, 0.65)
 		-- Tunnel 24 upper area
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-5799,2212,592), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-5834,2716,592), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-5831,3038,592), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-5674,3029,592), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-5799,2212,592), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-5834,2716,592), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-5831,3038,592), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-5674,3029,592), Angle(), 11, 0.65)
 		-- Floor 0 near elevator
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6872,6234,-5696), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6939,5367,-5885), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7400,5783,-5696), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6872,6234,-5696), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6939,5367,-5885), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7400,5783,-5696), Angle(), 11, 0.65)
 		-- Floor 0
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8160,5589,-5696), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8585,4861,-5826), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8639,4470,-5826), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8310,4382,-5826), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9205,4391,-5826), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9965,4396,-5954), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-10431,4327,-5954), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-10775,4294,-5954), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-11598,4327,-6083), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12506,4348,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12595,4452,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12911,4235,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12803,4455,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12849,4804,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-13005,4840,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12940,4993,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12604,4911,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12412,4745,-6082), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-12168,5121,-6082), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8160,5589,-5696), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8585,4861,-5826), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8639,4470,-5826), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8310,4382,-5826), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9205,4391,-5826), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9965,4396,-5954), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-10431,4327,-5954), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-10775,4294,-5954), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-11598,4327,-6083), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12506,4348,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12595,4452,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12911,4235,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12803,4455,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12849,4804,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-13005,4840,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12940,4993,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12604,4911,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12412,4745,-6082), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-12168,5121,-6082), Angle(), 11, 0.65)
 		-- Ventilation tube
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7659,4004,-5885), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6487,4006,-5885), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-5677,4008,-5885), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7659,4004,-5885), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6487,4006,-5885), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-5677,4008,-5885), Angle(), 11, 0.65)
 		-- Caves
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6432,4585,-7335), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6675,5396,-7328), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7431,5862,-7395), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7531,6569,-7510), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7584,7316,-7528), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8171,7706,-7566), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7404,8730,-7563), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8314,8384,-7534), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9402,7769,-7740), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9942,6912,-7799), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9766,6582,-7871), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9216,5912,-7947), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9506,5246,-7978), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-10072,5617,-7949), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-10249,4551,-7975), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-9244,3957,-7995), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8382,3432,-8131), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-8040,2676,-8129), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,2903,-8165), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-7417,3770,-8150), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6432,4585,-7335), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6675,5396,-7328), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7431,5862,-7395), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7531,6569,-7510), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7584,7316,-7528), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8171,7706,-7566), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7404,8730,-7563), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8314,8384,-7534), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9402,7769,-7740), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9942,6912,-7799), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9766,6582,-7871), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9216,5912,-7947), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9506,5246,-7978), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-10072,5617,-7949), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-10249,4551,-7975), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-9244,3957,-7995), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8382,3432,-8131), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-8040,2676,-8129), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,2903,-8165), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-7417,3770,-8150), Angle(), 11, 0.65)
 		-- Floor -1
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6606,3522,-8376), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6746,4801,-8389), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6214,4744,-8372), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6028,6028,-8384), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6444,7011,-8531), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6245,7419,-8708), Angle(), 11, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6503,5002,-7946), Angle(), 11, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6606,3522,-8376), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6746,4801,-8389), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6214,4744,-8372), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6028,6028,-8384), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6444,7011,-8531), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6245,7419,-8708), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6503,5002,-7946), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6602,3063,-8382), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6622,3862,-8378), Angle(), 11, 0.65)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6604,4337,-8382), Angle(), 11, 0.65)
 		
 	elseif MAP.ZombieSet == 4 then
 		-- HLR Zombies
@@ -953,6 +999,13 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3699,5735,-682), Angle(), 12, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3701,5629,-687), Angle(), 12, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3702,5514,-677), Angle(), 12, 1)
+		-- Tunnel 24
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,4905,-685), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,4595,-673), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6800,4253,-684), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6805,3913,-678), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,3596,-687), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,3298,-687), Angle(), 12, 1)
 		-- Tunnel 24 lower area
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,3083,-687), Angle(), 12, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,1619,-686), Angle(), 12, 1)
@@ -1024,6 +1077,9 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6444,7011,-8531), Angle(), 12, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6245,7419,-8708), Angle(), 12, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6503,5002,-7946), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6602,3063,-8382), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6622,3862,-8378), Angle(), 12, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6604,4337,-8382), Angle(), 12, 1)
 	else
 		-- LNR: HL2 - HL2 Zombies
 		-- Generator room
@@ -1041,6 +1097,14 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3699,5735,-682), Angle(), 7, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3701,5629,-687), Angle(), 7, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-3702,5514,-677), Angle(), 7, 1)
+		-- Tunnel 24
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,4905,-685), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,4595,-673), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6800,4253,-684), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6805,3913,-678), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6810,3596,-687), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6815,3298,-687), Angle(), 7, 1)
+
 		-- Tunnel 24 lower area
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,3083,-687), Angle(), 7, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-7420,1619,-686), Angle(), 7, 1)
@@ -1111,7 +1175,13 @@ function MAP:ModifyMapEntities()
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6028,6028,-8384), Angle(), 7, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6444,7011,-8531), Angle(), 7, 1)
 		GAMEMODE:CreateSpawner_B_LNR(Vector(-6245,7419,-8708), Angle(), 7, 1)
-		GAMEMODE:CreateSpawner_B_LNR(Vector(-6503,5002,-7946), Angle(), 4, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6505,5001,-7837), Angle(), 4, 1)
+
+		-- add these to the other ones too
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6602,3063,-8382), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6622,3862,-8378), Angle(), 7, 1)
+		GAMEMODE:CreateSpawner_B_LNR(Vector(-6604,4337,-8382), Angle(), 7, 1)
+		
 	end
 	
 	for k, v in pairs(ents.FindInBox(Vector(-6075, 2128, 592), Vector(-5937, 2128, 592))) do
@@ -1144,18 +1214,24 @@ end
 
 function MAP:AddItemPickups()
 
-	GAMEMODE:CreateWeaponEntity("weapon_hornetgun", Vector(-6723, 2543, 335))
+	GAMEMODE:CreateWeaponEntity("weapon_m249", Vector(-6723, 2543, 335))
+	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-6723, 2600, 335))
+	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-6723, 2400, 335))
+	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-6723, 2300, 335))
+	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-6723, 2200, 335))
 
-	GAMEMODE:CreateWeaponEntity("weapon_m16", Vector(-5728, 7996, -8468))
+	GAMEMODE:CreateWeaponEntity("weapon_m16", Vector(-6941, 4839, -5885))
+
 	GAMEMODE:CreateWeaponEntity("weapon_ak47", Vector(-6866, 5810, -8120))
 
-	GAMEMODE:CreateWeaponEntity("weapon_m249", Vector(-7071, 1727, -267))
-	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-7030, 1761, -303))
-	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-7105, 1762, -303))
-	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-7106, 1665, -303))
-	GAMEMODE:CreatePickupEntity("ammo_556", Vector(-7023, 1664, -303))
+	GAMEMODE:CreateWeaponEntity("weapon_hornetgun", Vector(-7071, 1727, -267))
 
-	GAMEMODE:CreateWeaponEntity("weapon_egon", Vector(-6052, 2369, -175))
+	GAMEMODE:CreateWeaponEntity("weapon_egon", Vector(-7052,5848,-5312))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-12451, 4826, -6319), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-12294, 4826, -6319), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-12294, 4983, -6313), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-12454, 4986, -6319), Angle(0, math.random(-180, 180), 0))
+
 	GAMEMODE:CreateWeaponEntity("weapon_mp5", Vector(-7099, 2142, -559))
 	GAMEMODE:CreateWeaponEntity("weapon_handgrenade", Vector(-7124, 2155, -559))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_9mmar", Vector(-7124, 2130, -559))
@@ -1182,7 +1258,9 @@ function MAP:AddItemPickups()
 	GAMEMODE:CreatePickupEntity("hl1_ammo_buckshot", Vector(-4348, 7408, -681))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_argrenades", Vector(-4033, 6989, -655))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_9mmar", Vector(-4022, 7005, -655))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_9mmar", Vector(-4013, 6986, -655))
+
+	GAMEMODE:CreatePickupEntity("hl1_ammo_9mmar", Vector(-4119,7064,-687))
+
 	GAMEMODE:CreateWeaponEntity("weapon_mp5", Vector(-3992, 7025, -655))
 	GAMEMODE:CreateWeaponEntity("weapon_handgrenade", Vector(-3976, 7044, -655))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_crossbow", Vector(-7873, 5463, 170))
@@ -1190,7 +1268,7 @@ function MAP:AddItemPickups()
 	GAMEMODE:CreatePickupEntity("hl1_ammo_buckshot", Vector(-7874, 5547, 178))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_buckshot", Vector(-7877, 5580, 185))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_9mmbox", Vector(-7892, 5625, 186))
-	GAMEMODE:CreateWeaponEntity("weapon_gauss", Vector(-6542, 5760, -1263))
+	GAMEMODE:CreateWeaponEntity("weapon_gauss", Vector(-6058,2370,-175))
 	GAMEMODE:CreateWeaponEntity("weapon_357", Vector(-8459, 4853, -5816))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_357", Vector(-8475, 4834, -5826))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_357", Vector(-8477, 4862, -5826))
@@ -1240,16 +1318,12 @@ function MAP:AddItemPickups()
 
 	-- GAMEMODE:CreateWeaponEntity("weapon_snark", Vector(-7241, 1438, -678))
 	-- GAMEMODE:CreateWeaponEntity("weapon_snark", Vector(-6148, 3035, -623))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6096, 2332, -175), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6031, 2331, -139), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6099, 2404, -139), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6034, 2404, -139), Angle(0, math.random(-180, 180), 0))
 
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6589, 5683, -1263), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6503, 5685, -1263), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6501, 5835, -1263), Angle(0, math.random(-180, 180), 0))
-	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6603, 5836, -1263), Angle(0, math.random(-180, 180), 0))
-	
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6022, 2413, -175), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6022, 2322, -175), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6098, 2323, -175), Angle(0, math.random(-180, 180), 0))
+	GAMEMODE:CreatePickupEntity("hl1_ammo_gaussclip", Vector(-6097, 2413, -175), Angle(0, math.random(-180, 180), 0))
+
 	GAMEMODE:CreatePickupEntity("hl1_ammo_buckshot", Vector(-6786, 6279, -5696), Angle(0, math.random(-180, 180), 0))
 	GAMEMODE:CreatePickupEntity("hl1_ammo_argrenades", Vector(-6789, 6326, -5696), Angle(0, math.random(-180, 180), 0))
 	GAMEMODE:CreateWeaponEntity("weapon_handgrenade", Vector(-6812, 6290, -5696), Angle(0, math.random(-180, 180), 0))
@@ -1332,6 +1406,7 @@ function MAP:OnMapRestart()
 	for k, v in pairs(player.GetAll()) do
 		v:SetFuel(0)
 	end
+	NO_WAVE_MUSIC = false
 end
 
 function MAP:GetRestartFromCheckpointPos(num)
@@ -1357,10 +1432,36 @@ function MAP:OnRestartFromCheckpoint(num)
 			locatorEnt:On()
 			locatorEnt:SetPortalTime(self.PortalPrepareTime)
 		end
+		NO_WAVE_MUSIC = true
+		local PanelMusic = math.random(1,3)
+		if PanelMusic == 1 then
+			GAMEMODE:PlayGlobalMusic("PizzaTower.Spooky")
+		elseif PanelMusic == 2 then
+			GAMEMODE:PlayGlobalMusic("PizzaTower.UnexPart1")
+		else
+			GAMEMODE:PlayGlobalMusic("PizzaTower.NeverEnd")
+		end
 	end
 	for k, v in pairs(player.GetAll()) do
 		v:EquipSuit()
 	end
+end
+
+function MAP:OnGameEnd()
+	local endmusic = math.random(1,6)
+	if endmusic == 1 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Smackdown")
+	elseif endmusic == 2 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Hairline")
+	elseif endmusic == 3 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Pieing")
+	elseif endmusic == 4 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Deluxe")
+	elseif endmusic == 5 then
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Italian")
+	else
+		GAMEMODE:PlayGlobalMusic("PizzaTower.Toppings")
+	end	
 end
 
 end
